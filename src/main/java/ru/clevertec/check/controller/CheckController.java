@@ -21,18 +21,19 @@ public class CheckController {
     public static final String PRODUCTS_FILE_PATH = "./src/main/resources/products.csv";
     public static final String DISCOUNT_CARDS_FILE_PATH = "./src/main/resources/discountCards.csv";
     public static final String RESULTS_FILE_PATH = "result.csv";
+    public static final String DISCOUNT_CARD_PATTERN = "discountCard";
+    public static final String BALANCED_DEBIT_CARD_PATTERN = "balanceDebitCard";
+    public static final String PATH_TO_FILE_PATTERN = "pathToFile";
+    public static final String SAVE_TO_FILE_PATTERN = "saveToFile";
+    public static final String EQUALS_REGEXP = "=";
+    public static final String DASH_REGEXP = "-";
+    public static final String ITEM_REGEXP = "\\d+-\\d+";
     public static final int DEFAULT_DISCOUNT_RATE = 2;
 
-    List<Product> products = CsvUtil.readProducts(PRODUCTS_FILE_PATH);
-    List<DiscountCard> discountCards = CsvUtil.readDiscountCards(DISCOUNT_CARDS_FILE_PATH);
-
-    ProductRepository productRepository = new InMemoryProductRepository(products);
-    ProductService productService = new ProductService(productRepository);
-    DiscountCardRepository discountCardRepository = new InMemoryDiscountCardRepository(discountCards);
-    DiscountCardService discountCardService = new DiscountCardService(discountCardRepository);
-    CheckService checkService = new CheckService(productService);
-
     public void create(String[] args) {
+        String pathToFile = null;
+        String saveToFile = null;
+
         if (args.length < 2) {
             throw new BadRequestException("BAD REQUEST");
         }
@@ -42,25 +43,39 @@ public class CheckController {
         double balanceDebitCard = 0;
 
         for (String arg : args) {
-            if (arg.startsWith("discountCard=")) {
-                discountCardNumber = arg.split("=")[1];
-            } else if (arg.startsWith("balanceDebitCard=")) {
-                balanceDebitCard = Double.parseDouble(arg.split("=")[1]);
-            } else if (arg.matches("\\d+-\\d+")) {
-                String[] parts = arg.split("-");
+            if (arg.startsWith(DISCOUNT_CARD_PATTERN)) {
+                discountCardNumber = arg.split(EQUALS_REGEXP)[1];
+            } else if (arg.startsWith(BALANCED_DEBIT_CARD_PATTERN)) {
+                balanceDebitCard = Double.parseDouble(arg.split(EQUALS_REGEXP)[1]);
+            } else if (arg.startsWith(PATH_TO_FILE_PATTERN)) {
+                pathToFile = arg.split(EQUALS_REGEXP)[1];
+            } else if (arg.startsWith(SAVE_TO_FILE_PATTERN)) {
+                saveToFile = arg.split(EQUALS_REGEXP)[1];
+            } else if (arg.matches(ITEM_REGEXP)) {
+                String[] parts = arg.split(DASH_REGEXP);
                 int productId = Integer.parseInt(parts[0]);
                 int quantity = Integer.parseInt(parts[1]);
                 productQuantities.merge(productId, quantity, Integer::sum);
             }
         }
 
-        if (productQuantities.isEmpty()) {
+        if (productQuantities.isEmpty() || pathToFile == null || saveToFile == null) {
             throw new BadRequestException("BAD REQUEST");
         }
 
         if (balanceDebitCard <= 0) {
             throw new NotEnoughMoneyException("NOT ENOUGH MONEY");
         }
+
+        List<Product> products = CsvUtil.readProducts(pathToFile);
+        List<DiscountCard> discountCards = CsvUtil.readDiscountCards(DISCOUNT_CARDS_FILE_PATH);
+
+        ProductRepository productRepository = new InMemoryProductRepository(products);
+        ProductService productService = new ProductService(productRepository);
+        DiscountCardRepository discountCardRepository = new InMemoryDiscountCardRepository(discountCards);
+        DiscountCardService discountCardService = new DiscountCardService(discountCardRepository);
+        CheckService checkService = new CheckService(productService);
+
 
         DiscountCard discountCard = null;
 
@@ -74,7 +89,7 @@ public class CheckController {
         }
 
         Check check = checkService.createCheck(productQuantities, discountCard, balanceDebitCard);
-        CsvUtil.saveCheck(RESULTS_FILE_PATH, check, discountCard);
+        CsvUtil.saveCheck(saveToFile, check, discountCard);
 
         printCheck(check, discountCard);
     }
