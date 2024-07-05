@@ -22,13 +22,13 @@ This Java-based console application generates a receipt for a store, based on pr
 The application is executed via a console command:
 
 ```sh
-java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java id-quantity discountCard=xxxx balanceDebitCard=xxxx
+java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java id-quantity discountCard=xxxx balanceDebitCard=xxxx pathToFile=xxxx saveToFile=xxxx
 ```
 
 ### Example Command
 
 ```sh
-java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100
+java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 pathToFile=./src/main/resources/products.csv saveToFile=./result.csv
 ```
 
 ## Input Details
@@ -36,10 +36,12 @@ java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 dis
 - `id-quantity`: Identifies the product and the quantity (e.g., `3-1` for product ID 3 with quantity 1).
 - `discountCard=xxxx`: Specifies the discount card number (e.g., `discountCard=1111`).
 - `balanceDebitCard=xxxx`: Specifies the debit card balance (e.g., `balanceDebitCard=100`).
+- `pathToFile=xxxx`: Specifies the relative path to the input products file (e.g., `pathToFile=./src/main/resources/products.csv`).
+- `saveToFile=xxxx`: Specifies the relative path to the output receipt file (e.g., `saveToFile=./result.csv`).
 
 ## Output
 
-- The generated receipt will be saved as `result.csv` in the project root directory.
+- The generated receipt will be saved to the specified file.
 - The receipt will also be printed to the console.
 
 ## Exception Handling
