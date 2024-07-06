@@ -1,7 +1,7 @@
-package main.java.ru.clevertec.check.repository;
+package ru.clevertec.check.repository.inMemory;
 
-import main.java.ru.clevertec.check.entity.DiscountCard;
-import main.java.ru.clevertec.check.repository.interfaces.DiscountCardRepository;
+import ru.clevertec.check.entity.DiscountCard;
+import ru.clevertec.check.repository.interfaces.DiscountCardRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class InMemoryDiscountCardRepository implements DiscountCardRepository {
     }
 
     @Override
-    public Optional<DiscountCard> findByNumber(String number) {
-        return discountCards.stream().filter(card -> card.getCardNumber().equals(number)).findFirst();
+    public Optional<DiscountCard> findByNumber(int number) {
+        return discountCards.stream().filter(card -> card.getCardNumber() == number).findFirst();
     }
 }

@@ -1,7 +1,7 @@
-package main.java.ru.clevertec.check.service;
+package ru.clevertec.check.service;
 
-import main.java.ru.clevertec.check.entity.DiscountCard;
-import main.java.ru.clevertec.check.repository.interfaces.DiscountCardRepository;
+import ru.clevertec.check.entity.DiscountCard;
+import ru.clevertec.check.repository.interfaces.DiscountCardRepository;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ public class DiscountCardService {
         this.discountCardRepository = discountCardRepository;
     }
 
-    public Optional<DiscountCard> getDiscountCardByNumber(String cardNumber) {
+    public Optional<DiscountCard> getDiscountCardByNumber(int cardNumber) {
         return discountCardRepository.findByNumber(cardNumber);
     }
 }

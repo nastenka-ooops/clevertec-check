@@ -1,4 +1,4 @@
-package main.java.ru.clevertec.check.entity;
+package ru.clevertec.check.entity;
 
 public class Product {
 

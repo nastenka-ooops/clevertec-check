@@ -1,7 +1,7 @@
-package main.java.ru.clevertec.check.repository;
+package ru.clevertec.check.repository.inMemory;
 
-import main.java.ru.clevertec.check.entity.Product;
-import main.java.ru.clevertec.check.repository.interfaces.ProductRepository;
+import ru.clevertec.check.entity.Product;
+import ru.clevertec.check.repository.interfaces.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;

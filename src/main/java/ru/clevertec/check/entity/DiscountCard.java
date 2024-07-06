@@ -1,11 +1,11 @@
-package main.java.ru.clevertec.check.entity;
+package ru.clevertec.check.entity;
 
 public class DiscountCard {
     private Integer id;
-    private String cardNumber;
+    private int cardNumber;
     private int discountAmount;
 
-    public DiscountCard(Integer id, String cardNumber, int discountAmount) {
+    public DiscountCard(Integer id, int cardNumber, int discountAmount) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.discountAmount = discountAmount;
@@ -19,11 +19,11 @@ public class DiscountCard {
         this.id = id;
     }
 
-    public String getCardNumber() {
+    public int getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(int cardNumber) {
         this.cardNumber = cardNumber;
     }
 

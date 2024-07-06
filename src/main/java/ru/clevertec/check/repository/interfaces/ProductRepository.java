@@ -1,6 +1,6 @@
-package main.java.ru.clevertec.check.repository.interfaces;
+package ru.clevertec.check.repository.interfaces;
 
-import main.java.ru.clevertec.check.entity.Product;
+import ru.clevertec.check.entity.Product;
 
 import java.util.List;
 import java.util.Optional;
