@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.clevertec.check.service.CheckServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2024-07-06T19:02:31" hostname="ANASTY-SHMASTY" time="0.539">
+<testsuite name="ru.clevertec.check.service.CheckServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2024-07-07T20:35:26" hostname="ANASTY-SHMASTY" time="0.469">
   <properties/>
-  <testcase name="createCheck_ZeroQuantity()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.505"/>
-  <testcase name="createCheck_ValidData()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.005"/>
-  <testcase name="createCheck_EmptyProductList()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
-  <testcase name="createCheck_NegativeBalance()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
+  <testcase name="createCheck_ZeroQuantity()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.44"/>
+  <testcase name="createCheck_ValidData()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.004"/>
+  <testcase name="createCheck_EmptyProductList()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
+  <testcase name="createCheck_NegativeBalance()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
   <testcase name="createCheck_NoDiscountCArd()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
   <testcase name="createCheck_NegativeQuantity()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
   <testcase name="createCheck_NotEnoughMoney()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
-  <testcase name="createCheck_WholesaleDiscountCardApplied()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.003"/>
-  <testcase name="createCheck_ZeroBalance()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
+  <testcase name="createCheck_WholesaleDiscountCardApplied()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
+  <testcase name="createCheck_ZeroBalance()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.0"/>
   <testcase name="createCheck_DiscountCardApplied()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
-  <testcase name="createCheck_ProductNotFound()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.003"/>
+  <testcase name="createCheck_ProductNotFound()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.002"/>
   <testcase name="createCheck_InvalidQuantity()" classname="ru.clevertec.check.service.CheckServiceTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

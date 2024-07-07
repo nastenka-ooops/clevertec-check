@@ -2,12 +2,15 @@ package ru.clevertec.check.entity;
 
 public class DiscountCard {
     private Integer id;
-    private int cardNumber;
+    private int discountCard;
     private int discountAmount;
 
-    public DiscountCard(Integer id, int cardNumber, int discountAmount) {
+    public DiscountCard() {
+    }
+
+    public DiscountCard(Integer id, int discountCard, int discountAmount) {
         this.id = id;
-        this.cardNumber = cardNumber;
+        this.discountCard = discountCard;
         this.discountAmount = discountAmount;
     }
 
@@ -19,12 +22,12 @@ public class DiscountCard {
         this.id = id;
     }
 
-    public int getCardNumber() {
-        return cardNumber;
+    public int getDiscountCard() {
+        return discountCard;
     }
 
-    public void setCardNumber(int cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setDiscountCard(int discountCard) {
+        this.discountCard = discountCard;
     }
 
     public int getDiscountAmount() {

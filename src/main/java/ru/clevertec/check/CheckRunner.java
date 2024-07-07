@@ -1,3 +1,4 @@
+/*
 package ru.clevertec.check;
 
 import ru.clevertec.check.controller.CheckController;
@@ -11,6 +12,7 @@ public class CheckRunner {
         CheckController checkController = new CheckController();
         try {
             checkController.create(args);
+
         } catch (CheckException e) {
             CsvUtil.saveError(RESULTS_FILE_PATH, e.getMessage());
             e.printStackTrace();
@@ -18,4 +20,4 @@ public class CheckRunner {
             throw new RuntimeException(e);
         }
     }
-}
+}*/

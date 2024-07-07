@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'war'
 }
 
 group 'ru.clevertec.check'
@@ -10,7 +11,10 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
+    implementation 'org.springframework:spring-jdbc:6.1.10'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
@@ -30,6 +34,10 @@ tasks.register('copyJarToRoot', Copy) {
     mustRunAfter(':jar', ':compileTestJava', ':test')
 }
 
+war {
+    archiveFileName = 'clevertec-check.war'
+}
+
 jar {
     manifest {
         attributes(
@@ -43,3 +51,4 @@ jar {
 
     finalizedBy('copyJarToRoot')
 }
+

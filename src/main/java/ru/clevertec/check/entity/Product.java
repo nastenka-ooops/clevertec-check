@@ -5,15 +5,18 @@ public class Product {
     private Integer id;
     private String description;
     private double price;
-    private int quantityInStock;
-    private boolean wholesaleProduct;
+    private int quantity;
+    private boolean isWholesale;
 
-    public Product(Integer id, String description, double price, int quantityInStock, boolean wholesaleProduct) {
+    public Product() {
+    }
+
+    public Product(Integer id, String description, double price, int quantity, boolean isWholesale) {
         this.id = id;
         this.description = description;
         this.price = price;
-        this.quantityInStock = quantityInStock;
-        this.wholesaleProduct = wholesaleProduct;
+        this.quantity = quantity;
+        this.isWholesale = isWholesale;
     }
 
     public Integer getId() {
@@ -40,19 +43,19 @@ public class Product {
         this.price = price;
     }
 
-    public int getQuantityInStock() {
-        return quantityInStock;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuantityInStock(int quantityInStock) {
-        this.quantityInStock = quantityInStock;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public boolean isWholesaleProduct() {
-        return wholesaleProduct;
+    public boolean getIsWholesale() {
+        return isWholesale;
     }
 
-    public void setWholesaleProduct(boolean wholesaleProduct) {
-        this.wholesaleProduct = wholesaleProduct;
+    public void setIsWholesale(boolean wholesale) {
+        this.isWholesale = wholesale;
     }
 }

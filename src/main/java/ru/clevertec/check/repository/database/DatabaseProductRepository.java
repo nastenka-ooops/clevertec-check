@@ -36,7 +36,7 @@ public class DatabaseProductRepository implements ProductRepository {
                 products.add(product);
             }
         } catch (SQLException e) {
-            throw new InternalServerException("INTERNAL SERVER ERROR");
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
         }
         return products;
     }
@@ -59,8 +59,51 @@ public class DatabaseProductRepository implements ProductRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new InternalServerException("INTERNAL SERVER ERROR");
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void createProduct(Product product) {
+        String query = "INSERT INTO product (description, price, quantity_in_stock, wholesale_product) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, product.getDescription());
+            preparedStatement.setDouble(2, product.getPrice());
+            preparedStatement.setInt(3, product.getQuantity());
+            preparedStatement.setBoolean(4, product.getIsWholesale());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
+        }
+    }
+
+    @Override
+    public boolean updateProductById(int id, Product product) {
+        String query = "UPDATE product SET description = ?, price = ?, quantity_in_stock = ?, wholesale_product = ? " +
+                "WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, product.getDescription());
+            preparedStatement.setDouble(2, product.getPrice());
+            preparedStatement.setInt(3, product.getQuantity());
+            preparedStatement.setBoolean(4, product.getIsWholesale());
+            preparedStatement.setInt(5, product.getId());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
+        }
+    }
+
+    @Override
+    public boolean deleteProductById(int id) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
+        }
     }
 }

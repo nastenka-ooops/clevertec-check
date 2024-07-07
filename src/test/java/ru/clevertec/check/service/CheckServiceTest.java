@@ -19,12 +19,14 @@ import static org.mockito.Mockito.when;
 
 public class CheckServiceTest {
     private ProductService productService;
+    private DiscountCardService discountCardService;
     private CheckService checkService;
 
     @BeforeEach
     void setUp() {
         productService = mock(ProductService.class);
-        checkService = new CheckService(productService);
+        discountCardService = mock(DiscountCardService.class);
+        checkService = new CheckService(productService, discountCardService );
     }
 
     @Test

@@ -1,3 +1,4 @@
+/*
 package ru.clevertec.check.controller;
 
 import ru.clevertec.check.config.DatabaseConfig;
@@ -86,7 +87,7 @@ public class CheckController {
             throw new NotEnoughMoneyException("NOT ENOUGH MONEY");
         }
 
-        DatabaseConfig databaseConfig = new DatabaseConfig(dbUrl, dbUsername, dbPassword);
+        DatabaseConfig databaseConfig = new DatabaseConfig();
 
         try (Connection connection = databaseConfig.getConnection()) {
 
@@ -95,7 +96,7 @@ public class CheckController {
 
             ProductService productService = new ProductService(productRepository);
             DiscountCardService discountCardService = new DiscountCardService(discountCardRepository);
-            CheckService checkService = new CheckService(productService);
+            CheckService checkService = new CheckService(productService, discountCardService);
 
             DiscountCard discountCard = getDiscountCard(discountCardService, discountCardNumber);
 
@@ -128,7 +129,7 @@ public class CheckController {
         }
 
         if (discountCard != null) {
-            System.out.printf("Discount card %s, Discount percentage %d%%\n", discountCard.getCardNumber(),
+            System.out.printf("Discount card %s, Discount percentage %d%%\n", discountCard.getDiscountCard(),
                     discountCard.getDiscountAmount());
         }
         System.out.printf(Locale.US, "Total: %.2f\n", check.getTotalPrice());
@@ -137,3 +138,4 @@ public class CheckController {
 
     }
 }
+*/
