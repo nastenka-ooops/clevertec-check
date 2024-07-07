@@ -16,19 +16,23 @@ This Java-based console application generates a receipt for a store, based on pr
 - Java 22
 - Understanding of OOP principles
 - Design patterns (e.g., Factory, Builder, FactoryMethod)
+- Gradle 8.5
+- PostgreSQL for database storage
+- JDBC (org.postgresql.Driver) for database connectivity
+- Minimum 70% unit test coverage
 
 ## Usage
 
 The application is executed via a console command:
 
 ```sh
-java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java id-quantity discountCard=xxxx balanceDebitCard=xxxx pathToFile=xxxx saveToFile=xxxx
+java -jar clevertec-check.jar id-quantity discountCard=xxxx balanceDebitCard=xxxx saveToFile=xxxx datasource.url=xxxx datasource.username=xxxx datasource.password=xxxx
 ```
 
 ### Example Command
 
 ```sh
-java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 pathToFile=./src/main/resources/products.csv saveToFile=./result.csv
+java -jar clevertec-check.jar 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 saveToFile=./result.csv datasource.url=jdbc:postgresql://localhost:5432/check datasource.username=postgres datasource.password=postgres
 ```
 
 ## Input Details
@@ -36,8 +40,10 @@ java -cp src ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 dis
 - `id-quantity`: Identifies the product and the quantity (e.g., `3-1` for product ID 3 with quantity 1).
 - `discountCard=xxxx`: Specifies the discount card number (e.g., `discountCard=1111`).
 - `balanceDebitCard=xxxx`: Specifies the debit card balance (e.g., `balanceDebitCard=100`).
-- `pathToFile=xxxx`: Specifies the relative path to the input products file (e.g., `pathToFile=./src/main/resources/products.csv`).
 - `saveToFile=xxxx`: Specifies the relative path to the output receipt file (e.g., `saveToFile=./result.csv`).
+- `datasource.url`: Specifies the JDBC URL for connecting to PostgreSQL.
+- `datasource.username`: Specifies the username for PostgreSQL authentication.
+- `datasource.password`: Specifies the password for PostgreSQL authentication.
 
 ## Output
 
