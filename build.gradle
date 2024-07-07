@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
-group 'ru.clevertec'
+group 'ru.clevertec.check'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -23,6 +22,24 @@ test {
     useJUnitPlatform()
 }
 
-application {
-    mainClass = 'ru.clevertec.check.CheckRunner'
+tasks.register('copyJarToRoot', Copy) {
+    from('./build/libs/check-1.0-SNAPSHOT.jar')
+    into('.')
+    rename 'check-1.0-SNAPSHOT.jar', 'clevertec-check.jar'
+    doNotTrackState('Should run every time. Root directory content cannot be cached.')
+    mustRunAfter(':jar', ':compileTestJava', ':test')
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.clevertec.check.CheckRunner',
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    finalizedBy('copyJarToRoot')
 }

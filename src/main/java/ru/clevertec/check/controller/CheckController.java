@@ -104,7 +104,7 @@ public class CheckController {
 
             printCheck(check, discountCard);
         } catch (SQLException e) {
-            throw new InternalServerException("INTERNAL SERVER EXCEPTION");
+            throw new InternalServerException("INTERNAL SERVER EXCEPTION", e);
         }
     }
 

@@ -13,6 +13,7 @@ public class CheckRunner {
             checkController.create(args);
         } catch (CheckException e) {
             CsvUtil.saveError(RESULTS_FILE_PATH, e.getMessage());
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
