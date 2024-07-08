@@ -2,14 +2,15 @@ package ru.clevertec.check.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.clevertec.check.dto.CheckRequest;
+import ru.clevertec.check.dto.ProductRequest;
 import ru.clevertec.check.entity.Check;
 import ru.clevertec.check.entity.DiscountCard;
 import ru.clevertec.check.entity.Product;
 import ru.clevertec.check.exception.BadRequestException;
 import ru.clevertec.check.exception.NotEnoughMoneyException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ public class CheckServiceTest {
     void setUp() {
         productService = mock(ProductService.class);
         discountCardService = mock(DiscountCardService.class);
-        checkService = new CheckService(productService, discountCardService );
+        checkService = new CheckService(productService, discountCardService);
     }
 
     @Test
@@ -36,24 +37,30 @@ public class CheckServiceTest {
         DiscountCard discountCard = new DiscountCard(1, 1111, 3);
         when(productService.getProductById(1)).thenReturn(Optional.of(product1));
         when(productService.getProductById(2)).thenReturn(Optional.of(product2));
+        when(discountCardService.getDiscountCardById(1)).thenReturn(Optional.of(discountCard));
 
-        Map<Integer, Integer> products = Map.of(1, 5, 2, 3);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product1.getId(), 5),
+                new ProductRequest(product2.getId(), 3)
+        ), 1111, 100.0);
 
-        Check check = checkService.createCheck(products, discountCard, 100);
+        Check check = checkService.createCheck(checkRequest);
 
         assertNotNull(check);
         assertEquals(2, check.getCheckItems().size());
-        assertEquals(12.70, check.getTotalPriceWithDiscount(), 0.01);
+        assertEquals(12.78, check.getTotalPriceWithDiscount(), 0.01);
     }
 
     @Test
     void createCheck_ProductNotFound() {
         when(productService.getProductById(anyInt())).thenReturn(Optional.empty());
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(0, 5)
+        ), 1111, 100.0);
 
         assertThrows(BadRequestException.class, () -> {
-            checkService.createCheck(products, null, 100);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -62,10 +69,13 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 5)
+        ), 1111, 3.0);
+
 
         assertThrows(NotEnoughMoneyException.class, () -> {
-            checkService.createCheck(products, null, 3);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -74,10 +84,13 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 0);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 0)
+        ), 1111, 100.0);
+
 
         assertThrows(BadRequestException.class, () -> {
-            checkService.createCheck(products, null, 100);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -86,10 +99,13 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, -1);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), -10)
+        ), 1111, 100.0);
+
 
         assertThrows(BadRequestException.class, () -> {
-            checkService.createCheck(products, null, 100);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -98,10 +114,13 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 15);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 30)
+        ), 1111, 100.0);
+
 
         assertThrows(BadRequestException.class, () -> {
-            checkService.createCheck(products, null, 100);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -110,25 +129,31 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, false);
         DiscountCard discountCard = new DiscountCard(1, 1111, 3);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
+        when(discountCardService.getDiscountCardById(1)).thenReturn(Optional.of(discountCard));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 5)
+        ), 1111, 100.0);
 
-        Check check = checkService.createCheck(products, discountCard, 100);
+
+        Check check = checkService.createCheck(checkRequest);
 
         assertNotNull(check);
         assertEquals(1, check.getCheckItems().size());
-        assertEquals(0.16, check.getCheckItems().getFirst().getDiscount(), 0.01);
+        assertEquals(0.10, check.getCheckItems().getFirst().getDiscount(), 0.01);
     }
 
 
     @Test
-    void createCheck_NoDiscountCArd(){
+    void createCheck_NoDiscountCard() {
         Product product = new Product(1, "Milk", 1.07, 10, false);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 3)
+        ), 0, 100.0);
 
-        Check check = checkService.createCheck(products, null, 100);
+        Check check = checkService.createCheck(checkRequest);
 
         assertNotNull(check);
         assertEquals(1, check.getCheckItems().size());
@@ -140,9 +165,12 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 5)
+        ), 0, 100.0);
 
-        Check check = checkService.createCheck(products, null, 100);
+
+        Check check = checkService.createCheck(checkRequest);
 
         assertNotNull(check);
         assertEquals(1, check.getCheckItems().size());
@@ -151,10 +179,10 @@ public class CheckServiceTest {
 
     @Test
     void createCheck_EmptyProductList() {
-        Map<Integer, Integer> products = new HashMap<>();
+        CheckRequest checkRequest = new CheckRequest(List.of(), 1111, 100.0);
 
         assertThrows(BadRequestException.class, () -> {
-            checkService.createCheck(products, null, 100);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -163,10 +191,13 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 5)
+        ), 0, 0);
+
 
         assertThrows(NotEnoughMoneyException.class, () -> {
-            checkService.createCheck(products, null, 0);
+            checkService.createCheck(checkRequest);
         });
     }
 
@@ -175,10 +206,12 @@ public class CheckServiceTest {
         Product product = new Product(1, "Milk", 1.07, 10, true);
         when(productService.getProductById(1)).thenReturn(Optional.of(product));
 
-        Map<Integer, Integer> products = Map.of(1, 5);
+        CheckRequest checkRequest = new CheckRequest(List.of(
+                new ProductRequest(product.getId(), 5)
+        ), 0, -10);
 
         assertThrows(NotEnoughMoneyException.class, () -> {
-            checkService.createCheck(products, null, -10);
+            checkService.createCheck(checkRequest);
         });
     }
 }

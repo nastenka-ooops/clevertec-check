@@ -12,6 +12,9 @@ public class Check {
     private double totalDiscount;
     private double totalPriceWithDiscount;
 
+    public Check() {
+    }
+
     public Check(Date date, Time time, List<CheckItem> checkItems, double totalPrice, double totalDiscount, double totalPriceWithDiscount) {
         this.date = date;
         this.time = time;

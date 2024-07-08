@@ -56,35 +56,6 @@ public class CheckService {
                 totalDiscount, finalTotal);
     }
 
-    public Check createCheck(Map<Integer, Integer> products, DiscountCard discountCard, double balanceDebitCard) {
-        List<CheckItem> checkItems = new ArrayList<>();
-        int cardDiscountRate = getCardDiscountRate(discountCard);
-        double totalPrice = 0;
-        double totalDiscount = 0;
-
-        validateProductMap(products);
-
-        for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
-            Product product = getProduct(entry.getKey());
-            int quantity = validateQuantity(entry.getValue(), product.getQuantity());
-
-            double productPrice = calculateProductPrice(product, quantity);
-            double productDiscount = calculateProductDiscount(product, quantity, cardDiscountRate);
-
-            CheckItem checkItem = new CheckItem(product, quantity, productPrice, productDiscount);
-            checkItems.add(checkItem);
-
-            totalPrice += productPrice;
-            totalDiscount += productDiscount;
-        }
-
-        double finalTotal = calculateFinalTotal(totalPrice, totalDiscount);
-        validateBalance(finalTotal, balanceDebitCard);
-
-        return new Check(new Date(), new Time(System.currentTimeMillis()), checkItems, totalPrice,
-                totalDiscount, finalTotal);
-    }
-
     private int getCardDiscountRate(DiscountCard discountCard) {
         return discountCard != null ? discountCard.getDiscountAmount() : 0;
     }
@@ -137,12 +108,6 @@ public class CheckService {
     private void validateBalance(double finalTotal, double balanceDebitCard) {
         if (finalTotal > balanceDebitCard) {
             throw new NotEnoughMoneyException("NOT ENOUGH MONEY");
-        }
-    }
-
-    private void validateProductMap(Map<Integer, Integer> products) {
-        if (products.isEmpty()) {
-            throw new BadRequestException("BAD REQUEST");
         }
     }
 

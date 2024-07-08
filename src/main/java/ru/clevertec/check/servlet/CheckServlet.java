@@ -13,7 +13,6 @@ import ru.clevertec.check.entity.DiscountCard;
 import ru.clevertec.check.exception.CheckException;
 import ru.clevertec.check.repository.database.DatabaseDiscountCardRepository;
 import ru.clevertec.check.repository.database.DatabaseProductRepository;
-import ru.clevertec.check.repository.interfaces.DiscountCardRepository;
 import ru.clevertec.check.service.CheckService;
 import ru.clevertec.check.service.DiscountCardService;
 import ru.clevertec.check.service.ProductService;
@@ -36,7 +35,7 @@ public class CheckServlet extends HttpServlet {
         super.init();
         this.objectMapper = new ObjectMapper();
         try {
-        Connection connection = new DatabaseConfig().getConnection();
+            Connection connection = new DatabaseConfig().getConnection();
             this.checkService = new CheckService(new ProductService(new DatabaseProductRepository(connection)),
                     new DiscountCardService(new DatabaseDiscountCardRepository(connection)));
         } catch (SQLException e) {
