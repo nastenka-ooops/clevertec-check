@@ -1,5 +1,7 @@
 package ru.clevertec.check.entity;
 
+import java.util.Objects;
+
 public class DiscountCard {
     private Integer id;
     private int discountCard;
@@ -36,5 +38,21 @@ public class DiscountCard {
 
     public void setDiscountAmount(int discountAmount) {
         this.discountAmount = discountAmount;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiscountCard card = (DiscountCard) o;
+        return Objects.equals(id, card.id) &&
+                discountCard == card.discountCard &&
+                discountAmount == card.discountAmount;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, discountCard, discountAmount);
     }
 }

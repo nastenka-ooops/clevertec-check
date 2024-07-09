@@ -21,6 +21,14 @@ public class ProductServlet extends HttpServlet {
     private ProductService productService;
     private ObjectMapper objectMapper;
 
+    public ProductServlet() {
+    }
+
+    public ProductServlet(ProductService productService, ObjectMapper objectMapper) {
+        this.productService = productService;
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void init() throws ServletException {
         super.init();

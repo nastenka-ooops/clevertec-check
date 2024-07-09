@@ -1,5 +1,7 @@
 package ru.clevertec.check.entity;
 
+import java.util.Objects;
+
 public class Product {
 
     private Integer id;
@@ -57,5 +59,22 @@ public class Product {
 
     public void setIsWholesale(boolean wholesale) {
         this.isWholesale = wholesale;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+                Double.compare(product.price, price) == 0 &&
+                quantity == product.quantity &&
+                isWholesale == product.isWholesale &&
+                Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, price, quantity, isWholesale);
     }
 }
