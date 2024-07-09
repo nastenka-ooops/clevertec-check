@@ -1,13 +1,12 @@
 # Store Receipt Console Application
 
-This Java-based console application generates a receipt for a store, based on provided product IDs, quantities, discount cards, and debit card balances. The application demonstrates the use of OOP principles, design patterns, and robust exception handling.
+This Java-based console application generates a receipt for a store, based on provided product IDs, quantities, discount cards, and debit card balances. The application demonstrates the use of OOP principles, design patterns, and robust exception handling and includes a RESTful API for CRUD operations.
 
 ## Table of Contents
 
 - [Requirements](#requirements)
-- [Usage](#usage)
-- [Input Details](#input-details)
-- [Output](#output)
+- [RESTful API](#restful-api)
+- [Configuration](#configuration)
 - [Exception Handling](#exception-handling)
 - [Building and Running](#building-and-running)
 
@@ -21,34 +20,125 @@ This Java-based console application generates a receipt for a store, based on pr
 - JDBC (org.postgresql.Driver) for database connectivity
 - Minimum 70% unit test coverage
 
-## Usage
 
-The application is executed via a console command:
+## RESTful API
 
-```sh
-java -jar clevertec-check.jar id-quantity discountCard=xxxx balanceDebitCard=xxxx saveToFile=xxxx datasource.url=xxxx datasource.username=xxxx datasource.password=xxxx
+The application includes a RESTful API for managing products and discount cards. This API supports CRUD operations and integrates with the console application to ensure data consistency.
+
+### Endpoints
+
+#### Generate Receipt
+
+**POST** `/check`
+
+Request Body:
+```json
+{
+  "products": [
+    {
+      "id": 1,
+      "quantity": 5
+    },
+    {
+      "id": 2,
+      "quantity": 3
+    }
+  ],
+  "discountCard": 1234,
+  "balanceDebitCard": 100
+}
 ```
 
-### Example Command
+Response:
+- Returns a CSV file with the generated receipt.
 
-```sh
-java -jar clevertec-check.jar 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 saveToFile=./result.csv datasource.url=jdbc:postgresql://localhost:5432/check datasource.username=postgres datasource.password=postgres
+#### Products
+
+- **GET** `/products?id=1`  
+  Retrieves product details by ID.
+
+- **POST** `/products`  
+  Adds a new product to the database.  
+  Request Body:
+  ```json
+  {
+    "description": "Eat 100g.",
+    "price": 3.25,
+    "quantity": 5,
+    "isWholesale": true
+  }
+  ```
+
+- **PUT** `/products?id=1`  
+  Updates an existing product by ID.  
+  Request Body:
+  ```json
+  {
+    "description": "Chocolate Ritter sport 100g.",
+    "price": 3.25,
+    "quantity": 5,
+    "isWholesale": true
+  }
+  ```
+
+- **DELETE** `/products?id=1`  
+  Deletes a product by ID.
+
+#### Discount Cards
+
+- **GET** `/discountcards?id=1`  
+  Retrieves discount card details by ID.
+
+- **POST** `/discountcards`  
+  Adds a new discount card to the database.  
+  Request Body:
+  ```json
+  {
+    "discountCard": 5265,
+    "discountAmount": 2
+  }
+  ```
+
+- **PUT** `/discountcards?id=1`  
+  Updates an existing discount card by ID.  
+  Request Body:
+  ```json
+  {
+    "discountCard": 6786,
+    "discountAmount": 3
+  }
+  ```
+
+- **DELETE** `/discountcards?id=1`  
+  Deletes a discount card by ID.
+
+## Configuration
+
+### Environment Variables
+
+- `datasource.url`: Set in the system environment.
+- `datasource.username`: Set in the system environment.
+- `datasource.password`: Set in the system environment.
+
+Alternatively, configure Tomcat by adding the following variables to `catalina.properties`:
+
+```
+datasource.url=jdbc:postgresql://localhost:5432/check
+datasource.username=postgres
+datasource.password=postgres
 ```
 
-## Input Details
+### Building the WAR
 
-- `id-quantity`: Identifies the product and the quantity (e.g., `3-1` for product ID 3 with quantity 1).
-- `discountCard=xxxx`: Specifies the discount card number (e.g., `discountCard=1111`).
-- `balanceDebitCard=xxxx`: Specifies the debit card balance (e.g., `balanceDebitCard=100`).
-- `saveToFile=xxxx`: Specifies the relative path to the output receipt file (e.g., `saveToFile=./result.csv`).
-- `datasource.url`: Specifies the JDBC URL for connecting to PostgreSQL.
-- `datasource.username`: Specifies the username for PostgreSQL authentication.
-- `datasource.password`: Specifies the password for PostgreSQL authentication.
+Add the following to your `build.gradle` to produce a WAR file:
 
-## Output
+```groovy
+war {
+    archiveFileName = 'clevertec-check.war'
+}
+```
 
-- The generated receipt will be saved to the specified file.
-- The receipt will also be printed to the console.
+Run `gradle build` to generate the WAR file.
 
 ## Exception Handling
 
