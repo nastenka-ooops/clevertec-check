@@ -17,6 +17,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> getSortedProducts(String sortBy) {
+        return productRepository.findSortedProducts(sortBy);
+    }
+
     public Optional<Product> getProductById(int id) {
         return productRepository.findById(id);
     }
@@ -32,4 +36,5 @@ public class ProductService {
     public boolean deleteProductById(int id) {
         return productRepository.deleteProductById(id);
     }
+
 }

@@ -44,7 +44,11 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String productId = req.getParameter("id");
+
+        String sortBy = req.getParameter("sortBy");
+
         resp.setContentType("application/json");
+
         if (productId != null && !productId.isEmpty()) {
             int id = Integer.parseInt(productId);
             Optional<Product> product = productService.getProductById(id);
@@ -53,6 +57,9 @@ public class ProductServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
+        } else if (sortBy != null) {
+            List<Product> products = productService.getSortedProducts(sortBy);
+            resp.getWriter().print(objectMapper.writeValueAsString(products));
         } else {
             List<Product> products = productService.getAllProducts();
             resp.getWriter().print(objectMapper.writeValueAsString(products));

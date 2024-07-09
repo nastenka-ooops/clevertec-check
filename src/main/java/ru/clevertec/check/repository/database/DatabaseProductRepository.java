@@ -106,4 +106,20 @@ public class DatabaseProductRepository implements ProductRepository {
             throw new InternalServerException("INTERNAL SERVER ERROR", e);
         }
     }
+
+    public List<Product> findSortedProducts(String sortBy) {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM product ORDER BY " + (sortBy != null ? sortBy : "id");
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                products.add(new Product(rs.getInt("id"), rs.getString("description"),
+                        rs.getDouble("price"), rs.getInt("quantity_in_stock"),
+                        rs.getBoolean("wholesale_product")));
+            }
+        } catch (SQLException e) {
+            throw new InternalServerException("INTERNAL SERVER ERROR", e);
+        }
+        return products;
+    }
 }

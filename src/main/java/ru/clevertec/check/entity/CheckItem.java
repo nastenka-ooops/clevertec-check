@@ -6,6 +6,9 @@ public class CheckItem {
     private double totalPrice;
     private double discount;
 
+    public CheckItem() {
+    }
+
     public CheckItem(Product product, int quantity, double totalPrice, double discount) {
         this.product = product;
         this.quantity = quantity;

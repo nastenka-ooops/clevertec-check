@@ -9,6 +9,7 @@ import ru.clevertec.check.entity.DiscountCard;
 import ru.clevertec.check.entity.Product;
 import ru.clevertec.check.exception.BadRequestException;
 import ru.clevertec.check.exception.NotEnoughMoneyException;
+import ru.clevertec.check.repository.interfaces.CheckRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,13 @@ public class CheckServiceTest {
     private ProductService productService;
     private DiscountCardService discountCardService;
     private CheckService checkService;
+    private CheckRepository checkRepository;
 
     @BeforeEach
     void setUp() {
         productService = mock(ProductService.class);
         discountCardService = mock(DiscountCardService.class);
-        checkService = new CheckService(productService, discountCardService);
+        checkService = new CheckService(productService, discountCardService, checkRepository);
     }
 
     @Test

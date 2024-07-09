@@ -18,6 +18,30 @@ create table public.discount_card
     amount smallint not null CHECK (amount >= 0 AND amount <= 100)
 );
 
+create table products_check
+(
+    id                        integer generated always as identity
+        primary key,
+    date                      date    not null,
+    time                      time    not null,
+    total_price               numeric not null,
+    total_discount            numeric not null,
+    total_price_with_discount numeric not null
+);
+
+create table check_items
+(
+    id          integer generated always as identity
+        primary key,
+    check_id    integer not null
+        references products_check,
+    product_id  integer not null
+        references product,
+    quantity    integer not null,
+    total_price numeric not null,
+    discount    numeric not null
+);
+
 INSERT INTO product (description, price, quantity_in_stock, wholesale_product) VALUES
                                                                               ('Milk', 1.07, 10, TRUE),
                                                                               ('Cream 400g', 2.71, 20, TRUE),

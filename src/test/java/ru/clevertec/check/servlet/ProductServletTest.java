@@ -17,8 +17,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -65,12 +64,34 @@ public class ProductServletTest {
     }
 
     @Test
+    public void testDoGetWithSortByParam() throws Exception {
+        when(request.getParameter("sortBy")).thenReturn("price");
+
+        List<Product> mockProducts = new ArrayList<>(List.of(
+                new Product(1, "Test Product", 100, 0, false),
+                new Product(2, "Another Product", 50, 0, false)
+        ));
+
+        mockProducts.sort(Comparator.comparingDouble(Product::getPrice));
+        String expectedJson = objectMapper.writeValueAsString(mockProducts);
+
+        when(productService.getSortedProducts("price")).thenReturn(mockProducts);
+        when(response.getWriter()).thenReturn(new PrintWriter(responseWriter));
+
+        productServlet.doGet(request, response);
+
+        verify(response).setContentType("application/json");
+        assertEquals(expectedJson, responseWriter.toString().trim());
+    }
+
+
+    @Test
     public void testDoGetWithNoProductId() throws Exception {
         when(request.getParameter("id")).thenReturn(null);
 
         List<Product> mockProducts = List.of(
-                new Product(1, "Test Product", 100, 0, false),  // Assuming no need for the quantity
-                new Product(2, "Another Product", 50, 0, false) // Assuming no need for the quantity
+                new Product(1, "Test Product", 100, 0, false),
+                new Product(2, "Another Product", 50, 0, false)
         );
         when(productService.getAllProducts()).thenReturn(mockProducts);
 

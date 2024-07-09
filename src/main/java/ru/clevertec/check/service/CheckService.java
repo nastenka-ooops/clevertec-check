@@ -8,7 +8,10 @@ import ru.clevertec.check.entity.DiscountCard;
 import ru.clevertec.check.entity.Product;
 import ru.clevertec.check.exception.BadRequestException;
 import ru.clevertec.check.exception.NotEnoughMoneyException;
+import ru.clevertec.check.repository.interfaces.CheckRepository;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
 
@@ -16,10 +19,21 @@ public class CheckService {
 
     private final ProductService productService;
     private final DiscountCardService discountCardService;
+    private final CheckRepository checkRepository;
 
-    public CheckService(ProductService productService, DiscountCardService discountCardService) {
+
+    public CheckService(ProductService productService, DiscountCardService discountCardService, CheckRepository checkRepository) {
         this.productService = productService;
         this.discountCardService = discountCardService;
+        this.checkRepository = checkRepository;
+    }
+
+    public void saveCheck(Check check) throws SQLException {
+        checkRepository.saveCheck(check);
+    }
+
+    public List<Check> getAllChecks() {
+        return checkRepository.getAllChecks();
     }
 
     public Check createCheck(CheckRequest checkRequest) {
@@ -52,7 +66,7 @@ public class CheckService {
         double finalTotal = calculateFinalTotal(totalPrice, totalDiscount);
         validateBalance(finalTotal, checkRequest.getBalanceDebitCard());
 
-        return new Check(new Date(), new Time(System.currentTimeMillis()), checkItems, totalPrice,
+        return new Check(new Date(System.currentTimeMillis()), new Time(System.currentTimeMillis()), checkItems, totalPrice,
                 totalDiscount, finalTotal);
     }
 

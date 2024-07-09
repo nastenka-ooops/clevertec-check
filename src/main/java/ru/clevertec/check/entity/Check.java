@@ -1,10 +1,11 @@
 package ru.clevertec.check.entity;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Check {
+    private int id;
     private Date date;
     private Time time;
     private List<CheckItem> checkItems;
@@ -22,6 +23,14 @@ public class Check {
         this.totalPrice = totalPrice;
         this.totalDiscount = totalDiscount;
         this.totalPriceWithDiscount = totalPriceWithDiscount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getDate() {

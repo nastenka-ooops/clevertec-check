@@ -11,6 +11,7 @@ import ru.clevertec.check.dto.CheckRequest;
 import ru.clevertec.check.entity.Check;
 import ru.clevertec.check.entity.DiscountCard;
 import ru.clevertec.check.exception.CheckException;
+import ru.clevertec.check.repository.database.DataBaseCheckRepository;
 import ru.clevertec.check.repository.database.DatabaseDiscountCardRepository;
 import ru.clevertec.check.repository.database.DatabaseProductRepository;
 import ru.clevertec.check.service.CheckService;
@@ -37,10 +38,18 @@ public class CheckServlet extends HttpServlet {
         try {
             Connection connection = new DatabaseConfig().getConnection();
             this.checkService = new CheckService(new ProductService(new DatabaseProductRepository(connection)),
-                    new DiscountCardService(new DatabaseDiscountCardRepository(connection)));
+                    new DiscountCardService(new DatabaseDiscountCardRepository(connection)),
+                    new DataBaseCheckRepository(connection));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        List<Check> checks = checkService.getAllChecks();
+        resp.getWriter().print(objectMapper.writeValueAsString(checks));
     }
 
     @Override
@@ -52,6 +61,7 @@ public class CheckServlet extends HttpServlet {
 
         try {
             Check check = checkService.createCheck(checkRequest);
+            checkService.saveCheck(check);
             DiscountCard discountCard = checkService.getDiscountCard(checkRequest.getDiscountCard());
             List<String> checkLines = CsvUtil.saveCheck(check, discountCard);
             try (PrintWriter writer = resp.getWriter()) {
@@ -59,7 +69,7 @@ public class CheckServlet extends HttpServlet {
                     writer.println(line);
                 }
             }
-        } catch (CheckException e) {
+        } catch (SQLException | CheckException e) {
             List<String> checkLines = CsvUtil.saveError(e.getMessage());
             try (PrintWriter writer = resp.getWriter()) {
                 for (String line : checkLines) {
