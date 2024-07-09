@@ -9,6 +9,7 @@ This Java-based console application generates a receipt for a store, based on pr
 - [Configuration](#configuration)
 - [Exception Handling](#exception-handling)
 - [Building and Running](#building-and-running)
+- [New Features](#new-features)
 
 ## Requirements
 
@@ -51,6 +52,7 @@ Request Body:
 
 Response:
 - Returns a CSV file with the generated receipt.
+- Save check to database
 
 #### Products
 
@@ -155,3 +157,41 @@ To build and run the application, follow these steps:
 1. Ensure Java 22 is installed.
 2. Navigate to the project root directory.
 3. Execute the example command provided above or construct your own based on the usage section.
+
+## New Features
+
+### Manage Checks
+
+The application now includes functionality to manage checks. This includes creating checks and retrieving all checks.
+
+#### Create Check
+
+**POST** `/checks`  
+Adds a new check to the database.  
+Request Body:
+```json
+{
+  "products": [
+    {
+      "id": 1,
+      "quantity": 5
+    },
+    {
+      "id": 2,
+      "quantity": 3
+    }
+  ],
+  "discountCard": 1234,
+  "balanceDebitCard": 100
+}
+```
+
+#### Retrieve All Checks
+
+**GET** `/checks`  
+Retrieves all checks from the database. Response contains a list of checks with details about each check.
+
+### Product sorting
+
+**GET** `/products?sortBy=<field>`  
+  Retrieves products sorting by field.
